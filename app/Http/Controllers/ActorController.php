@@ -28,7 +28,7 @@ class ActorController extends Controller
      */
     public function index()
     {
-        $data = Actor::with(['movie'])->groupBy('name')->get();
+        $data = Actor::select('name', 'sex', 'date_of_birth', 'biography', 'image')->with(['movie'])->groupBy('name')->get();
 
         $actor = [];
         foreach($data as $value){
@@ -55,7 +55,7 @@ class ActorController extends Controller
             $actor = Actor::find($request->id)->delete();
 
             if ($actor) {
-                $data = Actor::with(['movie'])->groupBy('name')->get();
+                $data = Actor::select('name', 'sex', 'date_of_birth', 'biography', 'image')->with(['movie'])->groupBy('name')->get();
 
                 $actor = [];
                 foreach($data as $value){
@@ -123,7 +123,7 @@ class ActorController extends Controller
             
             if ($actor) {
                 $request->image->move(public_path('images/'), $file_name);
-                $data = Actor::with(['movie'])->groupBy('name')->get();
+                $data = Actor::select('name', 'sex', 'date_of_birth', 'biography', 'image')->with(['movie'])->groupBy('name')->get();
 
                 $actor = [];
                 foreach($data as $value){
@@ -194,7 +194,7 @@ class ActorController extends Controller
             
             if ($actor) {
                 $request->imageNew ? $request->imageNew->move(public_path('images/'), $file_name) : '';
-                $data = Actor::with(['movie'])->groupBy('name')->get();
+                $data = Actor::select('name', 'sex', 'date_of_birth', 'biography', 'image')->with(['movie'])->groupBy('name')->get();
 
                 $actor = [];
                 foreach($data as $value){

@@ -28,7 +28,7 @@ class ProducerController extends Controller
      */
     public function index()
     {
-        $data = Producer::with(['movie'])->groupBy('name')->get();
+        $data = Producer::select('name', 'sex', 'date_of_birth', 'biography', 'image')->with(['movie'])->groupBy('name')->get();
         
         $producer = [];
         foreach($data as $value){
@@ -55,7 +55,7 @@ class ProducerController extends Controller
             $producer = Producer::find($request->id)->delete();
 
             if ($producer) {
-                $data = Producer::with(['movie'])->groupBy('name')->get();
+                $data = Producer::select('name', 'sex', 'date_of_birth', 'biography', 'image')->with(['movie'])->groupBy('name')->get();
         
                 $producer = [];
                 foreach($data as $value){
@@ -123,7 +123,7 @@ class ProducerController extends Controller
             
             if ($producer) {
                 $request->image->move(public_path('images/'), $file_name);
-                $data = Producer::with(['movie'])->groupBy('name')->get();
+                $data = Producer::select('name', 'sex', 'date_of_birth', 'biography', 'image')->with(['movie'])->groupBy('name')->get();
         
                 $producer = [];
                 foreach($data as $value){
@@ -194,7 +194,7 @@ class ProducerController extends Controller
             
             if ($producer) {
                 $request->imageNew ? $request->imageNew->move(public_path('images/'), $file_name) : '';
-                $data = Producer::with(['movie'])->groupBy('name')->get();
+                $data = Producer::select('name', 'sex', 'date_of_birth', 'biography', 'image')->with(['movie'])->groupBy('name')->get();
         
                 $producer = [];
                 foreach($data as $value){
