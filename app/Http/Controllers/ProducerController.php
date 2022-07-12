@@ -28,13 +28,14 @@ class ProducerController extends Controller
      */
     public function index()
     {
-        $data = Producer::with(['movie'])->get();
+        $data = Producer::with(['movie'])->groupBy('name')->get();
         
         $producer = [];
         foreach($data as $value){
             $producer[] = (object) array_merge((array) $value->toArray(), (array) [
-                'imagePath' => $value->image ? 'images/'.$value->image : 'images/no_photo.png',
+                'imagePath' => $value->image ? 'images/'.$value->image : 'assets/no_photo.png',
                 'dateFormat' => Carbon::parse($value->date_of_birth)->format('d M Y'),
+                'movie' => $this->getProducerMovies($value->name),
             ]);
         }
         $producer = collect($producer);
@@ -54,13 +55,14 @@ class ProducerController extends Controller
             $producer = Producer::find($request->id)->delete();
 
             if ($producer) {
-                $data = Producer::with(['movie'])->get();
+                $data = Producer::with(['movie'])->groupBy('name')->get();
         
                 $producer = [];
                 foreach($data as $value){
                     $producer[] = (object) array_merge((array) $value->toArray(), (array) [
-                        'imagePath' => $value->image ? 'images/'.$value->image : 'images/no_photo.png',
+                        'imagePath' => $value->image ? 'images/'.$value->image : 'assets/no_photo.png',
                         'dateFormat' => Carbon::parse($value->date_of_birth)->format('d M Y'),
+                        'movie' => $this->getProducerMovies($value->name),
                     ]);
                 }
                 $producer = collect($producer);
@@ -121,13 +123,14 @@ class ProducerController extends Controller
             
             if ($producer) {
                 $request->image->move(public_path('images/'), $file_name);
-                $data = Producer::with(['movie'])->get();
+                $data = Producer::with(['movie'])->groupBy('name')->get();
         
                 $producer = [];
                 foreach($data as $value){
                     $producer[] = (object) array_merge((array) $value->toArray(), (array) [
-                        'imagePath' => $value->image ? 'images/'.$value->image : 'images/no_photo.png',
+                        'imagePath' => $value->image ? 'images/'.$value->image : 'assets/no_photo.png',
                         'dateFormat' => Carbon::parse($value->date_of_birth)->format('d M Y'),
+                        'movie' => $this->getProducerMovies($value->name),
                     ]);
                 }
                 $producer = collect($producer);
@@ -191,14 +194,14 @@ class ProducerController extends Controller
             
             if ($producer) {
                 $request->imageNew ? $request->imageNew->move(public_path('images/'), $file_name) : '';
-
-                $data = Producer::with(['movie'])->get();
+                $data = Producer::with(['movie'])->groupBy('name')->get();
         
                 $producer = [];
                 foreach($data as $value){
                     $producer[] = (object) array_merge((array) $value->toArray(), (array) [
-                        'imagePath' => $value->image ? 'images/'.$value->image : 'images/no_photo.png',
+                        'imagePath' => $value->image ? 'images/'.$value->image : 'assets/no_photo.png',
                         'dateFormat' => Carbon::parse($value->date_of_birth)->format('d M Y'),
+                        'movie' => $this->getProducerMovies($value->name),
                     ]);
                 }
                 $producer = collect($producer);
@@ -215,5 +218,16 @@ class ProducerController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
+    }
+
+    public function getProducerMovies($name)
+    {
+        $data = Producer::with(['movie'])->where('name', $name)->get();
+
+        foreach($data as $value){
+            $movie[] = $value->movie()->first() ? $value->movie()->first()->toArray() : [];
+        }
+
+        return $movie;
     }
 }

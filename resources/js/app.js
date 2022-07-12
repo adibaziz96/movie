@@ -8,8 +8,7 @@ import Movie from './components/Movie.vue';
 import Actor from './components/Actor.vue';
 import Producer from './components/Producer.vue';
 import Toaster from "@meforma/vue-toaster";
-import vSelect from 'vue-select'
-import 'vue-select/dist/vue-select.css';
+import Multiselect from '@vueform/multiselect';
 
 window.Alpine = Alpine;
 
@@ -19,9 +18,10 @@ const app = createApp({
         Movie,
         Actor,
         Producer,
-        vSelect,
     }
 });
+
+app.component('multiselect', Multiselect);
 
 app.use(Toaster).mount("#app");
 Alpine.start();

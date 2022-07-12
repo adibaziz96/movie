@@ -40,18 +40,26 @@
 
                                     <div class="col-span-6 sm:col-span-3">
                                         <label for="actor" class="block text-sm font-medium text-gray-700">Actor</label>
-                                        <input type="text" v-model="form.actor" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" list="actor">
-                                        <datalist id="actor">
-                                            <option v-for="actorVal in getActor" :key="actorVal.id">{{ actorVal.name }}</option>
-                                        </datalist>
+                                        <Multiselect
+                                            v-model="form.actor"
+                                            mode="tags"
+                                            :close-on-select="false"
+                                            :searchable="true"
+                                            :create-option="true"
+                                            :options="getActor"
+                                        />
                                     </div>
 
                                     <div class="col-span-6 sm:col-span-3">
                                         <label for="producer" class="block text-sm font-medium text-gray-700">Producer</label>
-                                        <input type="text" v-model="form.producer" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" list="producer">
-                                        <datalist id="producer">
-                                            <option v-for="producerVal in getProducer" :key="producerVal.id">{{ producerVal.name }}</option>
-                                        </datalist>
+                                        <Multiselect
+                                            v-model="form.producer"
+                                            mode="single"
+                                            :close-on-select="false"
+                                            :searchable="true"
+                                            :create-option="true"
+                                            :options="getProducer"
+                                        />
                                     </div>
 
                                     <div class="col-span-6 sm:col-span-6">
@@ -253,13 +261,14 @@
     } from '@headlessui/vue'
     import { XIcon } from '@heroicons/vue/outline'
     import { StarIcon, ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ShoppingCartIcon, CheckCircleIcon, PlusIcon } from '@heroicons/vue/solid'
+    import Multiselect from '@vueform/multiselect'
 
     const initialState = () => {
         return {
             name: '',
             year_of_release: '',
             plot: '',
-            actor: '',
+            actor: [],
             producer: '',
             image: '',
         };
@@ -291,6 +300,7 @@
             StarIcon,
             XIcon,
             PlusIcon,
+            Multiselect
         },
         data() {
             return {
@@ -300,15 +310,6 @@
                 open: false,
                 showForm: false,
                 form: initialState(),
-                value: [],
-                options: [
-                    { name: 'Vue.js', language: 'JavaScript' },
-                    { name: 'Adonis', language: 'JavaScript' },
-                    { name: 'Rails', language: 'Ruby' },
-                    { name: 'Sinatra', language: 'Ruby' },
-                    { name: 'Laravel', language: 'PHP' },
-                    { name: 'Phoenix', language: 'Elixir' }
-                ]
             }
         },
         props: {
@@ -417,3 +418,4 @@
         },
     }
 </script>
+<style src="@vueform/multiselect/themes/default.css"></style>

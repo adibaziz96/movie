@@ -28,17 +28,36 @@ class MovieController extends Controller
      */
     public function index()
     {
-        $data = Movie::with(['actors','producer'])->get();
-        $actor = Actor::get(['name','id']);
-        $producer = Producer::get(['name','id']);
+        $movies = Movie::with(['actors','producer'])->get();
+        $actors = Actor::get(['name','id']);
+
+        $producers = Producer::get(['name','id']);
+
+        $actor = [];
+        foreach ($actors as $value) {
+            $actor [] = [
+                'value' => $value->name,
+                'label' => $value->name,
+            ];
+        }
+
+        $producer = [];
+        foreach ($producers as $value) {
+            $producer [] = [
+                'value' => $value->name,
+                'label' => $value->name,
+            ];
+        }
 
         $movie = [];
-        foreach($data as $value){
+        foreach ($movies as $value) {
             $movie[] = (object) array_merge((array) $value->toArray(), (array) [
-                'imagePath' => $value->image ? 'images/'.$value->image : 'images/no_photo.png',
+                'imagePath' => $value->image ? 'images/'.$value->image : 'assets/no_photo.png',
             ]);
         }
 
+        $actor = collect($actor);
+        $producer = collect($producer);
         $movie = collect($movie);
         
         return view('movie', compact('movie', 'actor', 'producer'));
@@ -61,7 +80,7 @@ class MovieController extends Controller
                 $movie = [];
                 foreach($data as $value){
                     $movie[] = (object) array_merge((array) $value->toArray(), (array) [
-                        'imagePath' => $value->image ? 'images/'.$value->image : 'images/no_photo.png',
+                        'imagePath' => $value->image ? 'images/'.$value->image : 'assets/no_photo.png',
                     ]);
                 }
 
@@ -143,7 +162,7 @@ class MovieController extends Controller
                 $movie = [];
                 foreach($data as $value){
                     $movie[] = (object) array_merge((array) $value->toArray(), (array) [
-                        'imagePath' => $value->image ? 'images/'.$value->image : 'images/no_photo.png',
+                        'imagePath' => $value->image ? 'images/'.$value->image : 'assets/no_photo.png',
                     ]);
                 }
 
@@ -219,7 +238,7 @@ class MovieController extends Controller
                 $movie = [];
                 foreach($data as $value){
                     $movie[] = (object) array_merge((array) $value->toArray(), (array) [
-                        'imagePath' => $value->image ? 'images/'.$value->image : 'images/no_photo.png',
+                        'imagePath' => $value->image ? 'images/'.$value->image : 'assets/no_photo.png',
                     ]);
                 }
 

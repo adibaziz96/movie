@@ -108,8 +108,8 @@
                                             <div v-if="actor.movie" class="mt-4 flex">
                                                 <p class="text-sm font-bold italic text-gray-900">Featuring:</p>
                                             </div>
-                                            <div v-if="actor.movie">
-                                                <p class="text-sm font-medium italic text-gray-900">{{ actor.movie.name }}</p>
+                                            <div v-for="movie in actor.movie" :key="movie.id">
+                                                <p class="text-sm font-medium italic text-gray-900">{{ movie?.name }}</p>
                                             </div>
                                         </div>
                                     </div>

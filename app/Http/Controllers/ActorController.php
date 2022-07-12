@@ -28,13 +28,14 @@ class ActorController extends Controller
      */
     public function index()
     {
-        $data = Actor::with(['movie'])->get();
-        
+        $data = Actor::with(['movie'])->groupBy('name')->get();
+
         $actor = [];
         foreach($data as $value){
             $actor[] = (object) array_merge((array) $value->toArray(), (array) [
-                'imagePath' => $value->image ? 'images/'.$value->image : 'images/no_photo.png',
+                'imagePath' => $value->image ? 'images/'.$value->image : 'assets/no_photo.png',
                 'dateFormat' => Carbon::parse($value->date_of_birth)->format('d M Y'),
+                'movie' => $this->getActorMovies($value->name),
             ]);
         }
         $actor = collect($actor);
@@ -54,13 +55,14 @@ class ActorController extends Controller
             $actor = Actor::find($request->id)->delete();
 
             if ($actor) {
-                $data = Actor::with(['movie'])->get();
-        
+                $data = Actor::with(['movie'])->groupBy('name')->get();
+
                 $actor = [];
                 foreach($data as $value){
                     $actor[] = (object) array_merge((array) $value->toArray(), (array) [
-                        'imagePath' => $value->image ? 'images/'.$value->image : 'images/no_photo.png',
+                        'imagePath' => $value->image ? 'images/'.$value->image : 'assets/no_photo.png',
                         'dateFormat' => Carbon::parse($value->date_of_birth)->format('d M Y'),
+                        'movie' => $this->getActorMovies($value->name),
                     ]);
                 }
                 $actor = collect($actor);
@@ -121,13 +123,14 @@ class ActorController extends Controller
             
             if ($actor) {
                 $request->image->move(public_path('images/'), $file_name);
-                $data = Actor::with(['movie'])->get();
-        
+                $data = Actor::with(['movie'])->groupBy('name')->get();
+
                 $actor = [];
                 foreach($data as $value){
                     $actor[] = (object) array_merge((array) $value->toArray(), (array) [
-                        'imagePath' => $value->image ? 'images/'.$value->image : 'images/no_photo.png',
+                        'imagePath' => $value->image ? 'images/'.$value->image : 'assets/no_photo.png',
                         'dateFormat' => Carbon::parse($value->date_of_birth)->format('d M Y'),
+                        'movie' => $this->getActorMovies($value->name),
                     ]);
                 }
                 $actor = collect($actor);
@@ -191,14 +194,14 @@ class ActorController extends Controller
             
             if ($actor) {
                 $request->imageNew ? $request->imageNew->move(public_path('images/'), $file_name) : '';
+                $data = Actor::with(['movie'])->groupBy('name')->get();
 
-                $data = Actor::with(['movie'])->get();
-        
                 $actor = [];
                 foreach($data as $value){
                     $actor[] = (object) array_merge((array) $value->toArray(), (array) [
-                        'imagePath' => $value->image ? 'images/'.$value->image : 'images/no_photo.png',
+                        'imagePath' => $value->image ? 'images/'.$value->image : 'assets/no_photo.png',
                         'dateFormat' => Carbon::parse($value->date_of_birth)->format('d M Y'),
+                        'movie' => $this->getActorMovies($value->name),
                     ]);
                 }
                 $actor = collect($actor);
@@ -215,5 +218,16 @@ class ActorController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
+    }
+
+    public function getActorMovies($name)
+    {
+        $data = Actor::with(['movie'])->where('name', $name)->get();
+
+        foreach($data as $value){
+            $movie[] = $value->movie()->first() ? $value->movie()->first()->toArray() : [];
+        }
+
+        return $movie;
     }
 }
