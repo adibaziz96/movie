@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Cart;
 use Auth;
 
@@ -26,6 +27,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if (config('app.env') === 'production') {
+            \URL::forceScheme('https');
+        }
+
+        Schema::defaultStringLength(191);
+        
         view()->composer('*', function($view){
             $cart = 0;
             // if(Auth::check()){
