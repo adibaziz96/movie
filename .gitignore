@@ -11,3 +11,7 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 /public/images
+package-lock.json
+composer.lock
+/public/js
+/public/css
